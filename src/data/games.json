@@ -1,0 +1,45 @@
+{
+    "games": [
+        {
+            "id": 1,
+            "name": "It",
+            "author": "Skipstorm"
+        }, {
+            "id": 2,
+            "name": "Matsoft",
+            "author": "Gabtype"
+        }, {
+            "id": 3,
+            "name": "Fintone",
+            "author": "Topiclounge"
+        }, {
+            "id": 4,
+            "name": "Daltfresh",
+            "author": "Jabbercube"
+        }, {
+            "id": 5,
+            "name": "Temp",
+            "author": "JumpXS"
+        }, {
+            "id": 6,
+            "name": "Keylex",
+            "author": "Youtags"
+        }, {
+            "id": 7,
+            "name": "Lotlux",
+            "author": "Vinder"
+        }, {
+            "id": 8,
+            "name": "Redhold",
+            "author": "Brainlounge"
+        }, {
+            "id": 9,
+            "name": "Flexidy",
+            "author": "Innotype"
+        }, {
+            "id": 10,
+            "name": "Treeflex",
+            "author": "Roodel"
+        }
+    ]
+}
