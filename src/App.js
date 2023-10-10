@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import Dashboard from './components/dashboard/Dashboard'
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
+import CreateGame from './components/games/CreateGame';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' element={<Dashboard />} />
+          <Route path='/create' element={<CreateGame />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
         </Routes>
