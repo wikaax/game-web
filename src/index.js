@@ -1,12 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-// import registerServiceWorker from './registerServiceWorker';
+// import store from './app/store'
+import { Provider } from 'react-redux'
 import { legacy_createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from './store/reduces/rootReducer';
-import { Provider } from 'react-redux';
+import rootReducer from './store/reducers/rootReducer';
 import thunk from 'redux-thunk';
+import { createRoot } from 'react-dom/client'
 // import { reduxFirestore, getFirestore } from 'redux-firestore';
 // import { reactReduxFirebase, getFirebase } from 'reaxt-redux-firebase';
 // import firebaseConfig from './config/firebaseConfig';
@@ -21,14 +21,15 @@ import thunk from 'redux-thunk';
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const root = createRoot(document.getElementById('root'));
 
-// ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
-// registerServiceWorker();
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+
+root.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 
 

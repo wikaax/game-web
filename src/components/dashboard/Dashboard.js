@@ -1,5 +1,5 @@
 import GamesList from "../games/GamesList";
-import useFetch from "../useFetch";
+import useFetch from "../actions/useFetch";
 import Notifications from "./Notifications";
 
 const Dashboard = () => {
