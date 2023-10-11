@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth;"
+// import { firestoreReducer } from 'redux-firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAklJ6-Jw2vymGOZyr-hhQVi8u4ydiTLZw",
