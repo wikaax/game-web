@@ -3,7 +3,7 @@ import './index.css';
 import App from './App';
 // import store from './app/store'
 import { Provider } from 'react-redux'
-import { legacy_createStore, applyMiddleware, compose } from 'redux';
+import { legacy_createStore, applyMiddleware } from 'redux';
 import rootReducer from './store/reducers/rootReducer';
 import thunk from 'redux-thunk';
 import { createRoot } from 'react-dom/client'
@@ -26,8 +26,7 @@ const root = createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )
 
 root.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));

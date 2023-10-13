@@ -1,3 +1,27 @@
+// import { connect } from 'react-redux';
+// import { signIn } from '../../store/actions/authActions';
+// import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { auth } from '../config/firebaseConfig';
+
+// export const SignIn = (credentials) => {
+//   return async (dispatch) => {
+//     try {
+//       await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+//       dispatch(signIn(credentials));
+//     } catch (error) {
+//       console.error('Błąd podczas logowania: ', error);
+//     }
+//   };
+// };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     signIn: (creds) => dispatch(signIn(creds))
+//   };
+// };
+
+// export default connect(null, mapDispatchToProps)(SignIn);
+
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { signIn } from '../../store/actions/authActions'
