@@ -13,3 +13,18 @@ export const signIn = (credentials) => {
     }
   };
 };
+
+export const signOut = () => {
+    return async (dispatch) => {
+        const auth = getAuth();
+
+        try {
+            await signOut(auth);
+            dispatch({type: 'LOGOUT_SUCCESS'});
+        }catch(error) {
+            dispatch({type: 'LOGOUT_ERROR', error});
+            console.error(error);
+        }
+    };
+
+};

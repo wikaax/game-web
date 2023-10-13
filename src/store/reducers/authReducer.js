@@ -1,31 +1,6 @@
-// import { createSlice } from '@reduxjs/toolkit'
-
-// export const authSlice = createSlice({
-//   name: 'auth',
-//   initialState: {
-//     value: 0
-//   },
-//   reducers: {
-//     increment: state => {
-//       state.value += 1
-//     },
-//     decrement: state => {
-//       state.value -= 1
-//     },
-//     incrementByAmount: (state, action) => {
-//       state.value += action.payload
-//     }
-//   }
-// })
-
-// export const { increment, decrement, incrementByAmount } = authSlice.actions
-
-// export default authSlice.reducer
-
-// export const selectAuthValue = state => state.auth.value;
-
 const initState = {
-    authError: null
+    authError: null,
+    isAuthenticated: false
 }
 
 const authReducer = (state = initState, action) => {
@@ -34,14 +9,29 @@ const authReducer = (state = initState, action) => {
             console.log('login error');
             return {
                 ...state,
-                authError: 'Login failed'
+                authError: 'Login failed',
+                isAuthenticated: false
             }
         case 'LOGIN_SUCCESS':
             console.log('login success');
             return {
                 ...state,
-                authError: null
+                authError: null,
+                isAuthenticated: true
             }
+
+        case 'LOGOUT_SUCCESS':
+            return {
+                ...state,
+                isAuthenticated: false,
+                error: null
+            };
+            case 'LOGOUT_ERROR':
+            return {
+                ...state,
+                isAuthenticated: true,
+                error: action.error
+            };
         default:
             return state;
     }

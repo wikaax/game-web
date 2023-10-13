@@ -4,13 +4,15 @@ import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 import { connect } from 'react-redux';
 
-const Navbar = () => {
+const Navbar = (props) => {
+    const { isAuthenticated } = props;
+    console.log(props);
+
     return (
         <nav className="nav-wrapper grey darken-3">
             <div className="container">
-                <Link to='/' classname="brand-logo">Game Web</Link>
-                <SignedInLinks />
-                <SignedOutLinks />
+                <Link to='/' className="brand-logo">Game Web</Link>
+                { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
             </div>
         </nav>
     );
@@ -18,10 +20,10 @@ const Navbar = () => {
 
 const mapStateToProps = (state) => {
     console.log(state);
+    console.log(state.auth);
     return {
-
+        isAuthenticated: state.auth.isAuthenticated
     }
 }
  
-// export default connect(mapStateToProps)(Navbar);
-export default Navbar;
+export default connect(mapStateToProps)(Navbar);
