@@ -28,3 +28,16 @@ export const signOut = () => {
     };
 
 };
+
+export const logoutSuccess = () => {
+  return {
+    type: 'LOGOUT_SUCCESS'
+  };
+};
+
+export const logoutError = (error) => {
+  return {
+    type: 'LOGOUT_ERROR',
+    error
+  };
+};

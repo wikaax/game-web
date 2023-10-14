@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar';
 import Dashboard from './components/dashboard/Dashboard'
@@ -6,9 +6,6 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateGame from './components/games/CreateGame';
 import Home from './components/Home';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { increment, decrement, incrementByAmount } from './authSlice';
-// import { selectAuthValue } from './selectors';
 
 
 function App() {

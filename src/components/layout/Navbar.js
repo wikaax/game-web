@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 import { connect } from 'react-redux';
+import { signOut } from '../../store/actions/authActions'
 
 const Navbar = (props) => {
-    const { isAuthenticated } = props;
+    const { isAuthenticated, signOut } = props;
     console.log(props);
 
     return (
@@ -13,6 +14,7 @@ const Navbar = (props) => {
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
                 { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
+                <SignedInLinks isAuthenticated={isAuthenticated} signOut={signOut} />
             </div>
         </nav>
     );
@@ -25,5 +27,11 @@ const mapStateToProps = (state) => {
         isAuthenticated: state.auth.isAuthenticated
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signOut: () => dispatch(signOut())
+    }
+}
  
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

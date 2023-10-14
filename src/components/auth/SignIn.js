@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signIn, signOut } from '../../store/actions/authActions';
+import { useNavigate } from 'react-router-dom';
+
 
 const SignIn = () => {
     const [credentials, setCredentials] = useState({
@@ -9,6 +11,8 @@ const SignIn = () => {
     });
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const handleChange = (e) => {
         setCredentials({
@@ -21,10 +25,14 @@ const SignIn = () => {
         e.preventDefault();
         dispatch(signIn(credentials));
         console.log(credentials);
+
+        navigate('/');
     }
 
     const handleSignOut = () => {
         dispatch(signOut());
+        console.log(credentials);
+        navigate('/signin');
     }
 
     return (
