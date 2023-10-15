@@ -50,7 +50,10 @@ const SignUp = () => {
                         <input type="text" id="lastName" onChange={handleChange} value={credentials.lastName} />
                     </div>
                     <div className="input-field">
-                        <button className="btn pink lighten-1 z-depth-0" type="submit">Zarejestruj</button>
+                        <button className="btn pink lighten-1 z-depth-0" type="submit">
+                            Zarejestruj
+                            <i class="material-icons right">send</i>
+                        </button>
                     </div>
                 </form>
             </div>

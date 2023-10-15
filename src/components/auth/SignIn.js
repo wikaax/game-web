@@ -29,12 +29,6 @@ const SignIn = () => {
         navigate('/');
     }
 
-    const handleSignOut = () => {
-        dispatch(signOut());
-        console.log(credentials);
-        navigate('/signin');
-    }
-
     return (
         <div>
             <div className="container">
@@ -49,10 +43,12 @@ const SignIn = () => {
                         <input type="password" id="password" onChange={handleChange} value={credentials.password} />
                     </div>
                     <div className="input-field">
-                        <button className="btn pink lighten-1 z-depth-0">Zaloguj</button>
+                        <button className="btn pink lighten-1 z-depth-0">
+                            Zaloguj
+                            <i class="material-icons right">send</i>
+                        </button>
                     </div>
                 </form>
-                <button onClick={handleSignOut} className="btn pink lighten-1 z-depth-0">Wyloguj się</button>
             </div>
         </div>
     );

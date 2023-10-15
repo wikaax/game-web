@@ -10,7 +10,7 @@ const Navbar = (props) => {
     console.log(props);
 
     return (
-        <nav className="nav-wrapper grey darken-3">
+        <nav className="nav-wrapper pink darken-4">
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
                 { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}

@@ -1,40 +1,45 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "../redux/getData";
+import React, { useEffect, useState } from "react";
+import { fetchData } from "../actions/fetchData";
 
-const GamesList = ({ games, name }) => {
-    const dispatch = useDispatch();
-    const data = useSelector(state => state.data);
+const GamesList = ({ name }) => {
+    const [games, setGames] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        dispatch(fetchData());
-    }, [dispatch]);
+        const fetchDataFromAPI = async () => {
+            try {
+                const data = await fetchData();
+                setGames(data);
+                setIsLoading(false);
+            } catch (error) {
+                setError(error);
+                setIsLoading(false);
+            }
+        };
 
-    if (!data) {
+        fetchDataFromAPI();
+    }, []);
+
+    if (isLoading) {
         return <div>Loading...</div>;
     }
 
-    if (data.length === 0) {
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    if (!games || games.length === 0) {
         return <div>No games available.</div>;
     }
+
     return (
-        // <div className="games-list section">
-        //     <h2>{ name }</h2>
-        //     {games.map((game) => (
-        //         <div className="game-preview" key={game.id}>
-        //             <Link to={`/games/${game.id}`}>
-        //                 <h2>{ game.name }</h2>
-        //                 <p>Author: { game.author }</p>
-        //             </Link>
-        //         </div>
-        //     ))}
-        // </div>
         <div className="games-list">
-            {data.map(item => (
+            {games.map((item) => (
                 <div key={item.id}>{item.name}</div>
             ))}
-      </div>
+        </div>
     );
-}
- 
+};
+
 export default GamesList;
