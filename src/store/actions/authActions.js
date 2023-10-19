@@ -7,6 +7,7 @@ export const signIn = (credentials) => {
     try {
       await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
       dispatch({ type: 'LOGIN_SUCCESS' });
+      localStorage.setItem("isAuthenticated", "true");
     } catch (error) {
       dispatch({ type: 'LOGIN_ERROR', error });
       console.error(error.code, error.message);

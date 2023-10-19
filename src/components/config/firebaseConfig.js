@@ -1,8 +1,6 @@
-// firebaseConfig.js
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAklJ6-Jw2vymGOZyr-hhQVi8u4ydiTLZw",
@@ -17,6 +15,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+setPersistence(auth, browserSessionPersistence)
+.then(() => {
+    console.log('Trwała sesja została ustawiona');
+})
+.catch((error) => {
+    console.error('Błąd ustawiania trwałości danych uwierzytelnienia:', error);
+});
+
 const firestore = getFirestore(app);
 
 export { app, auth, firestore };
