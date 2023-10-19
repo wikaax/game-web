@@ -1,30 +1,26 @@
-import React from "react"
+import React from "react";
 import { Link } from "react-router-dom";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 import { connect } from 'react-redux';
-import { signOut } from '../../store/actions/authActions'
+import { signOut } from '../../store/actions/authActions';
 
-const Navbar = (props) => {
-    const { isAuthenticated, signOut } = props;
-    console.log(props);
-
+const Navbar = ({ isAuthenticated }) => {
+    console.log("Is Authenticated:", isAuthenticated);
     return (
         <nav className="nav-wrapper pink darken-4">
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
-                { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
-                <SignedInLinks isAuthenticated={isAuthenticated} signOut={signOut} />
+                {isAuthenticated ? <SignedInLinks isAuthenticated={isAuthenticated} /> : <SignedOutLinks isAuthenticated={isAuthenticated} />}
             </div>
         </nav>
     );
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
-    console.log(state.auth);
     return {
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        isLoading: state.auth.isLoading
     }
 }
 
@@ -33,5 +29,5 @@ const mapDispatchToProps = (dispatch) => {
         signOut: () => dispatch(signOut())
     }
 }
- 
+
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

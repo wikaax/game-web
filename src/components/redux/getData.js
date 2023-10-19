@@ -34,7 +34,7 @@ import { collection, getDocs } from "firebase/firestore";
 import db from "../config/firebaseService";
 
 export const fetchData = async () => {
-  const gamesCollection = collection(db, "games"); // "games" to nazwa twojej kolekcji w Firestore
+  const gamesCollection = collection(db, "games");
   const querySnapshot = await getDocs(gamesCollection);
   console.log('pobrano dane');
   const data = [];

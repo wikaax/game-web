@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { signIn, signOut } from '../../store/actions/authActions';
+// import { useDispatch } from 'react-redux';
+import { signIn  } from '../../store/actions/authActions';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebaseConfig';
 
 
 const SignIn = () => {
@@ -10,7 +11,7 @@ const SignIn = () => {
         password: ''
     });
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const navigate = useNavigate();
 
 
@@ -21,12 +22,16 @@ const SignIn = () => {
         });
     }
 
-    const handleSignIn = (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        dispatch(signIn(credentials));
-        console.log(credentials);
-
-        navigate('/');
+        try {
+            await signIn(auth, credentials.email, credentials.password);
+            console.log('Użytkownik został pomyślnie zalogowany');
+            console.log(auth.currentUser);
+            navigate('/');
+        } catch (error) {
+            console.error('Błąd podczas logowania użytkownika', error);
+        }
     }
 
     return (
@@ -45,7 +50,7 @@ const SignIn = () => {
                     <div className="input-field">
                         <button className="btn pink lighten-1 z-depth-0">
                             Zaloguj
-                            <i class="material-icons right">send</i>
+                            <i className="material-icons right">send</i>
                         </button>
                     </div>
                 </form>

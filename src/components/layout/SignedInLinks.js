@@ -11,7 +11,7 @@ const SignedInLinks = ({ isAuthenticated }) => {
     const navigate = useNavigate();
 
     const handleSignOut = async () => {
-        console.log("Próba wylogowania"); // Dodaj ten console.log() wewnątrz funkcji
+        console.log("Próba wylogowania");
         try {
             await signOut(auth);
             dispatch(logoutSuccess());

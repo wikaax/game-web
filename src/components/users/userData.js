@@ -8,7 +8,6 @@ const fetchUserData = () => {
       console.log('UID użytkownika:', user.uid);
       console.log('Adres e-mail użytkownika:', user.email);
       console.log('Nazwa użytkownika:', user.displayName);
-      // Inne informacje o użytkowniku dostępne w obiekcie 'user'.
     } else {
       console.log('Użytkownik nie jest zalogowany.');
     }

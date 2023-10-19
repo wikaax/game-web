@@ -1,8 +1,8 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut as firebaseSignOut } from "firebase/auth";
+import { auth } from "../../components/config/firebaseConfig";
 
 export const signIn = (credentials) => {
   return async (dispatch) => {
-    const auth = getAuth();
 
     try {
       await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
@@ -16,10 +16,9 @@ export const signIn = (credentials) => {
 
 export const signOut = () => {
     return async (dispatch) => {
-        const auth = getAuth();
 
         try {
-            await signOut(auth);
+            await firebaseSignOut(auth);
             dispatch({type: 'LOGOUT_SUCCESS'});
         }catch(error) {
             dispatch({type: 'LOGOUT_ERROR', error});

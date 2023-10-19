@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const SignUp = () => {
     const [credentials, setCredentials] = useState({
@@ -16,17 +17,35 @@ const SignUp = () => {
         });
     };
 
+    const addUserToFirestore = async (uid, email, firstName, lastName) => {
+        const db = getFirestore();
+        const userDocRef = doc(db, 'users', uid);
+        try {
+            await setDoc(userDocRef, {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+            });
+            console.log('Użytkownik został dodany do Firestore.');
+        } catch (error) {
+            console.error('Błąd dodawania użytkownika do Firestore:', error);
+        }
+    };
+
     const handleSignUp = async (e) => {
         e.preventDefault();
         const auth = getAuth();
 
         try {
-            await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
-            console.log('Użytkownik został pomyślnie zarejestrowany');
+            const userCredential = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
+            const user = userCredential.user;
+            await addUserToFirestore(user.uid, credentials.email, credentials.firstName, credentials.lastName);
+            console.log('Użytkownik został pomyślnie zarejestrowany i dodany do Firestore.');
         } catch (error) {
             console.error('Błąd podczas rejestracji użytkownika', error);
         }
     };
+
 
     return (
         <div>
