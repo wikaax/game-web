@@ -1,56 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { firestore } from '../config/firebaseConfig';
+import React from 'react';
+import { auth, firestore } from '../config/firebaseConfig';
 
-const GamesList = () => {
-  const [games, setGames] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+const GamesList = ({ games }) => {
 
-  useEffect(() => {
-    const fetchDataFromFirebase = async () => {
-      try {
-        const gamesCollection = collection(firestore, 'games');
-        const querySnapshot = await getDocs(gamesCollection);
-        const gamesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setGames(gamesData);
-        setIsLoading(false);
-      } catch (error) {
-        setError(error);
-        setIsLoading(false);
-      }
+    const handleAssignGame = async (gameId) => {
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = firestore.collection('users').doc(user.uid);
+                await userRef.update({
+                    games: firestore.FieldValue.arrayUnion(gameId),
+                });
+                console.log('Gra została dodana do Twojej biblioteki.');
+            } else {
+                console.error('Użytkownik nie jest zalogowany.');
+            }
+        } catch (error) {
+            console.error('Wystąpił błąd podczas dodawania gry do biblioteki:', error);
+        }
     };
 
-    fetchDataFromFirebase();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!games || games.length === 0) {
-    return <div>No games available.</div>;
-  }
-
-  return (
-    <div className="games-list">
-      <h2>Games List</h2>
-      <ul>
-        {games.map(game => (
-          <li key={game.id}>
-            <strong>{game.title}</strong> - {game.genre}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    return (
+        <div className="games-list">
+            <h2>Games List</h2>
+            <ul>
+                {games.map(game => (
+                    <li key={game.id}>
+                        <strong>{game.title}</strong> - {game.companyName}
+                        <button onClick={() => handleAssignGame(game.id)}>Dodaj grę</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default GamesList;

@@ -1,4 +1,3 @@
-// firebaseService.js (lub inną nazwę, którą wybierzesz)
 import { getFirestore } from "firebase/firestore";
 import { app } from "./firebaseConfig";
 

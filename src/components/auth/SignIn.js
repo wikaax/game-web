@@ -1,18 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { signIn, signOut } from '../../store/actions/authActions';
+import { signIn } from '../../store/actions/authActions';
 import { useNavigate } from 'react-router-dom';
-
+import { storeUserData } from '../../store/actions/authActions';
+import fetchDataFromFirestore from '../actions/fetchDataFromFirestore';
+import { getAuth } from 'firebase/auth';
 
 const SignIn = () => {
     const [credentials, setCredentials] = useState({
         email: '',
         password: ''
     });
+    const [currentUser, setCurrentUser] = useState(null); // Nowy stan dla bieżącego użytkownika
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const auth = getAuth(); // Pobierz obiekt autentykacji Firebase
+
+    useEffect(() => {
+        // Sprawdź, czy użytkownik jest zalogowany
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
+        });
+
+        // Odsubskrybuj zdarzenie po odmontowaniu komponentu
+        return () => unsubscribe();
+    }, [auth]);
 
     const handleChange = (e) => {
         setCredentials({
@@ -21,12 +39,18 @@ const SignIn = () => {
         });
     }
 
-    const handleSignIn = (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        dispatch(signIn(credentials));
-        console.log(credentials);
-
-        navigate('/');
+        try {
+            await dispatch(signIn(credentials));
+            if (currentUser) {
+                const userData = await fetchDataFromFirestore('users');
+                dispatch(storeUserData(userData));
+            }
+            navigate('/');
+        } catch (error) {
+            console.error("Błąd logowania:", error);
+        }
     }
 
     return (
@@ -45,7 +69,7 @@ const SignIn = () => {
                     <div className="input-field">
                         <button className="btn pink lighten-1 z-depth-0">
                             Zaloguj
-                            <i class="material-icons right">send</i>
+                            <i className="material-icons right">send</i>
                         </button>
                     </div>
                 </form>

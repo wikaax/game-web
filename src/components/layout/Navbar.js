@@ -29,6 +29,7 @@ const Navbar = (props) => {
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
                 { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
+                <SignedInLinks isAuthenticated={isAuthenticated} signOut={signOut} />
             </div>
         </nav>
     );

@@ -1,5 +1,5 @@
 import { getAuth, signOut } from "firebase/auth";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React from "react"
 import { NavLink, useNavigate } from "react-router-dom";
 import { logoutSuccess, logoutError } from '../../store/actions/authActions'
@@ -9,9 +9,10 @@ const SignedInLinks = ({ isAuthenticated }) => {
     const auth = getAuth();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const currentUser = useSelector(state => state.auth.currentUser);
 
     const conLog = () => {
-        console.log(isAuthenticated);
+        console.log(isAuthenticated + ' ' + currentUser);
     }
 
     const handleSignOut = async () => {
