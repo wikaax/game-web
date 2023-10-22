@@ -49,9 +49,13 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="user-profile">
-      <h5>Profil użytkownika {userData.username}</h5>
-      <p>Email: {userData.email}</p>
+    <div className="dashboard container">
+        <div className="row">
+            <div className="col s12 m6">
+                <h4><strong>{userData.firstName} {userData.lastName}</strong></h4>
+                <p>Email: {userData.email}</p>
+            </div>
+        </div>
     </div>
   );
 };

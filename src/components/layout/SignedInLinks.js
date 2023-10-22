@@ -37,7 +37,7 @@ const SignedInLinks = () => {
             <ul className="right">
                 <li><NavLink to='/' className="btn pink darken-2 waves-effect waves-light btn" onClick={conLog}>Moja lista</NavLink></li>
                 <li><button className="btn pink darken-2 waves-effect waves-light btn" onClick={handleSignOut}>Wyloguj się</button></li>
-                <li><NavLink to='/profile' className='btn btn-floating pink darken-2'>NN</NavLink></li>
+                <li><NavLink to='/profile' className='btn btn-floating pink darken-2'>{currentUser.firstName}</NavLink></li>
             </ul>
         );
     } else {

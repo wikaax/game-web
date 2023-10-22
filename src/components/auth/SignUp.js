@@ -22,17 +22,16 @@ const SignUp = () => {
     const auth = getAuth();
 
     try {
-      // Creating user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
       console.log('User registered successfully');
 
-      // Adding user data to Firestore after successful authentication
       const user = userCredential.user;
       addUserToFirestore({
         email: user.email,
+        password: credentials.password,
         firstName: credentials.firstName,
         lastName: credentials.lastName,
-        // Add other fields you want to save in the database
+        games: []
       });
     } catch (error) {
       console.error('Error during user registration: ', error);

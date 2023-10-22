@@ -1,14 +1,15 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { firestore } from '../../config/firebaseConfig'; // Import your Firebase configuration
+import { firestore } from '../../config/firebaseConfig';
 
 const addUserToFirestore = async (user) => {
   try {
     const usersCollection = collection(firestore, 'users');
     await addDoc(usersCollection, {
       email: user.email,
+      password: user.password,
       firstName: user.firstName,
       lastName: user.lastName,
-      // Add other fields you want to save in the database
+      games: []
     });
     console.log('User added to Firestore successfully');
   } catch (error) {
