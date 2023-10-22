@@ -6,21 +6,23 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateGame from './components/games/CreateGame';
 import UserProfile from './components/users/UserProfile';
-
+import { UserProvider } from './components/users/UserContext';
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Dashboard />} />
-          <Route path='/create' element={<CreateGame />} />
-          <Route path='/signin' element={<SignIn />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/profile' element={<UserProfile />} />
-        </Routes>
-      </div>
+      <UserProvider>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/create' element={<CreateGame />} />
+            <Route path='/signin' element={<SignIn />} />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/profile' element={<UserProfile />} />
+          </Routes>
+        </div>
+      </UserProvider>
     </BrowserRouter>
 
   );

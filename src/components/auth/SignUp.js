@@ -1,34 +1,45 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import addUserToFirestore from '../database/users/addUserToFirestore'; // Import the addUserToFirestore function
 
 const SignUp = () => {
-    const [credentials, setCredentials] = useState({
-        email: '',
-        password: '',
-        firstName: '',
-        lastName: ''
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: ''
+  });
+
+  const handleChange = (e) => {
+    setCredentials({
+      ...credentials,
+      [e.target.id]: e.target.value
     });
+  };
 
-    const handleChange = (e) => {
-        setCredentials({
-            ...credentials,
-            [e.target.id]: e.target.value
-        });
-    };
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    const auth = getAuth();
 
-    const handleSignUp = async (e) => {
-        e.preventDefault();
-        const auth = getAuth();
+    try {
+      // Creating user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
+      console.log('User registered successfully');
 
-        try {
-            await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
-            console.log('Użytkownik został pomyślnie zarejestrowany');
-        } catch (error) {
-            console.error('Błąd podczas rejestracji użytkownika', error);
-        }
-    };
+      // Adding user data to Firestore after successful authentication
+      const user = userCredential.user;
+      addUserToFirestore({
+        email: user.email,
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        // Add other fields you want to save in the database
+      });
+    } catch (error) {
+      console.error('Error during user registration: ', error);
+    }
+  };
 
-    return (
+  return (
         <div>
             <div className="container">
                 <form onSubmit={handleSignUp} className="white">

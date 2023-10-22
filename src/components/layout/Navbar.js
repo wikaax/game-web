@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
@@ -7,29 +7,23 @@ import { signOut } from '../../store/actions/authActions';
 
 const Navbar = (props) => {
     const { isAuthenticated } = props;
-    const [localIsAuthenticated, setLocalIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true); // Dodajemy state dla ładowania
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLocalIsAuthenticated(isAuthenticated);
+        if (isAuthenticated !== undefined) {
+            setLoading(false);
+        }
     }, [isAuthenticated]);
 
-    useEffect(() => {
-        if (localIsAuthenticated !== undefined) {
-            setLoading(false); // Ustawiamy loading na false, gdy mamy wartość isAuthenticated
-        }
-    }, [localIsAuthenticated]);
-
     if (loading) {
-        return <div>Loading...</div>; // Pokaż loader podczas ładowania autentykacji
+        return <div>Loading...</div>;
     }
 
     return (
         <nav className="nav-wrapper pink darken-4">
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
-                { isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
-                <SignedInLinks isAuthenticated={isAuthenticated} signOut={signOut} />
+                {isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}
             </div>
         </nav>
     );

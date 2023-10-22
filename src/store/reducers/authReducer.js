@@ -1,3 +1,5 @@
+import { UPDATE_USER } from "../actions/authActions";
+
 const initState = {
     authError: null,
     isAuthenticated: false
@@ -5,6 +7,11 @@ const initState = {
 
 const authReducer = (state = initState, action) => {
     switch(action.type) {
+        case UPDATE_USER:
+            return {
+                ...state,
+                currentUser: action.payload
+            };
         case 'LOGIN_ERROR':
             console.log('login error');
             return {

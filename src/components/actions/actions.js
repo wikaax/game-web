@@ -1,4 +1,4 @@
-import { fetchData } from './api'; // Załóżmy, że masz funkcję fetchData zwracającą Promise
+import { fetchData } from './api';
 
 export const setData = (data) => {
   return {

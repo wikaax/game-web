@@ -1,36 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import fetchDataFromFirestore from "../actions/fetchDataFromFirestore";
+import { useSelector } from 'react-redux';
 
-const UserProfile = ({ user }) => {
-    const [userData, setUserData] = useState(null);
+const UserProfile = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const user = useSelector(state => state.auth.currentUser);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const db = getFirestore();
-            const userDocRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(userDocRef);
-            if (userDoc.exists()) {
-                setUserData(userDoc.data());
-            } else {
-                console.log("Dokument użytkownika nie istnieje.");
-            }
-        };
-
-        if (user) {
-            fetchUserData();
+  useEffect(() => {
+    const fetchUserData = async () => {
+        console.log("Rozpoczęto pobieranie danych użytkownika...");
+        console.log("Oczekiwane user:", user.email, ' jego id: ', user.uid);
+        try {
+          const allUsersData = await fetchDataFromFirestore('users');
+          console.log("Pobrano dane użytkowników:", allUsersData);
+      
+          const currentUserData = allUsersData.find(userData => userData.email === user.email);
+          console.log("Pobrano dane użytkownika przed ustawieniem w stanie:", currentUserData);
+      
+          if (currentUserData) {
+            console.log("Ustawianie danych użytkownika w stanie:", currentUserData);
+            setUserData(currentUserData);
+          } else {
+            console.log("Nie znaleziono danych dla bieżącego użytkownika.");
+          }
+      
+          setLoading(false);
+        } catch (error) {
+          console.error("Błąd podczas pobierania danych użytkownika:", error);
+          setLoading(false);
         }
-    }, [user]);
+      };
 
-    if (!userData) {
-        return <div>Ładowanie danych użytkownika...</div>;
+    if (user) {
+      fetchUserData();
+    } else {
+      // Jeśli użytkownik nie istnieje, zakończ ładowanie
+      setLoading(false);
     }
+  }, [user]);
 
-    return (
-        <div className="user-profile">
-            <h1>Profil użytkownika: {userData.username}</h1>
-            <p>Email: {userData.email}</p>
-        </div>
-    );
+  if (loading) {
+    return <div>Ładowanie danych użytkownika...</div>;
+  }
+
+  if (!userData) {
+    return <div>Nie znaleziono danych dla bieżącego użytkownika.</div>;
+  }
+
+  return (
+    <div className="user-profile">
+      <h5>Profil użytkownika {userData.username}</h5>
+      <p>Email: {userData.email}</p>
+    </div>
+  );
 };
 
 export default UserProfile;

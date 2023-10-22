@@ -1,22 +1,26 @@
+import React, { useEffect } from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from 'react-redux';
-import React from "react"
 import { NavLink, useNavigate } from "react-router-dom";
-import { logoutSuccess, logoutError } from '../../store/actions/authActions'
+import { logoutSuccess, logoutError } from '../../store/actions/authActions';
 
-
-const SignedInLinks = ({ isAuthenticated }) => {
-    const auth = getAuth();
+const SignedInLinks = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const auth = getAuth();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const currentUser = useSelector(state => state.auth.currentUser);
 
+    useEffect(() => {
+        if (isAuthenticated && currentUser === null) {
+        }
+    }, [isAuthenticated, currentUser]);
+
     const conLog = () => {
-        console.log(isAuthenticated + ' ' + currentUser);
+        console.log(isAuthenticated, currentUser);
     }
 
     const handleSignOut = async () => {
-        console.log("Próba wylogowania"); // Dodaj ten console.log() wewnątrz funkcji
         try {
             await signOut(auth);
             dispatch(logoutSuccess());
@@ -26,7 +30,7 @@ const SignedInLinks = ({ isAuthenticated }) => {
             dispatch(logoutError(error));
             console.error("Błąd wylogowywania:", error);
         }   
-    };    
+    };
 
     if (isAuthenticated) {
         return (
@@ -36,9 +40,9 @@ const SignedInLinks = ({ isAuthenticated }) => {
                 <li><NavLink to='/profile' className='btn btn-floating pink darken-2'>NN</NavLink></li>
             </ul>
         );
-    }else {
+    } else {
         return null;
     }
 }
- 
+
 export default SignedInLinks;

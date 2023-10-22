@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../../store/actions/authActions';
 import { useNavigate } from 'react-router-dom';
-import { storeUserData } from '../../store/actions/authActions';
+import { storeUserData, updateUser } from '../../store/actions/authActions';
 import fetchDataFromFirestore from '../actions/fetchDataFromFirestore';
 import { getAuth } from 'firebase/auth';
 
@@ -11,26 +11,20 @@ const SignIn = () => {
         email: '',
         password: ''
     });
-    const [currentUser, setCurrentUser] = useState(null); // Nowy stan dla bieżącego użytkownika
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const auth = getAuth(); // Pobierz obiekt autentykacji Firebase
+    const auth = getAuth();
 
     useEffect(() => {
-        // Sprawdź, czy użytkownik jest zalogowany
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                setCurrentUser(user);
-            } else {
-                setCurrentUser(null);
+                // Przekazuj aktualnego użytkownika do akcji updateUser
+                dispatch(updateUser(user));
             }
         });
-
-        // Odsubskrybuj zdarzenie po odmontowaniu komponentu
         return () => unsubscribe();
-    }, [auth]);
+    }, [auth, dispatch]);
 
     const handleChange = (e) => {
         setCredentials({
@@ -43,10 +37,8 @@ const SignIn = () => {
         e.preventDefault();
         try {
             await dispatch(signIn(credentials));
-            if (currentUser) {
-                const userData = await fetchDataFromFirestore('users');
-                dispatch(storeUserData(userData));
-            }
+            const userData = await fetchDataFromFirestore('users');
+            dispatch(storeUserData(userData));
             navigate('/');
         } catch (error) {
             console.error("Błąd logowania:", error);
