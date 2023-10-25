@@ -6,6 +6,7 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateGame from './components/games/CreateGame';
 import UserProfile from './components/users/UserProfile';
+import MyList from './components/dashboard/MyList';
 import { UserProvider } from './components/users/UserContext';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path='/create' element={<CreateGame />} />
             <Route path='/signin' element={<SignIn />} />
             <Route path='/signup' element={<SignUp />} />
+            <Route path='/mylist' element={<MyList />} />
             <Route path='/profile' element={<UserProfile />} />
           </Routes>
         </div>

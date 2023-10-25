@@ -1,40 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useMemo, useEffect } from 'react';
+import GamesList from '../games/GamesList'
+import SearchBar from './SearchBar';
+import Fuse from 'fuse.js';
+import fetchDataFromFirestore from '../actions/fetchDataFromFirestore';
 
 const Dashboard = () => {
-    const [igdbData, setIgdbData] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [games, setGames] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchGames = async () => {
             try {
-                const response = await axios.get('/api/igdb/games');
-                setIgdbData(response.data);
+                const gamesData = await fetchDataFromFirestore('games');
+                setGames(gamesData);
+                setIsLoading(false);
             } catch (error) {
-                console.error('Błąd podczas pobierania danych z IGDB API:', error);
+                setError(error);
+                setIsLoading(false);
             }
         };
 
-        fetchData();
-    }, []); 
+        fetchGames();
+    }, [searchTerm]);
+
+    const fuse = useMemo(() => {
+        const options = {
+            keys: ['title'],
+            includeScore: true,
+            threshold: 0.3,
+        };
+        return new Fuse(games, options);
+    }, [games]);
+
+    const filteredGames = useMemo(() => {
+        if (!searchTerm.trim()) {
+            return games;
+        }
+
+        const results = fuse.search(searchTerm);
+        return results.map(result => result.item);
+    }, [games, searchTerm, fuse]);
 
     return (
-        <div>
-        <h1>Dane z IGDB</h1>
-        {igdbData.length > 0 ? (
-            <ul>
-                {igdbData.map(game => (
-                    <li key={game.id}>
-                        <strong>Tytuł: </strong>{game.name}<br />
-                        <strong>Gatunki: </strong>{game.genres.map(genre => genre.name).join(', ')}<br />
-                        <strong>Firma: </strong>{game.involved_companies.map(company => company.company.name).join(', ')}
-                        <hr />
-                    </li>
-                ))}
-            </ul>
-        ) : (
-            <p>Ładowanie danych...</p>
-        )}
-    </div>
+        <div className="dashboard container">
+            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+            <div className="row">
+                <div className="col s12 m6">
+                    {isLoading && <div>Loading...</div>}
+                    {error && <div>Error: {error.message}</div>}  
+                    <GamesList games={filteredGames} />
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import addUserToFirestore from '../database/users/addUserToFirestore'; // Import the addUserToFirestore function
+import addUserToFirestore from '../database/users/addUserToFirestore';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
