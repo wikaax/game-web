@@ -10,16 +10,13 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
         console.log("Rozpoczęto pobieranie danych użytkownika...");
-        console.log("Oczekiwane user:", user.email, ' jego id: ', user.uid);
         try {
           const allUsersData = await fetchDataFromFirestore('users');
           console.log("Pobrano dane użytkowników:", allUsersData);
       
           const currentUserData = allUsersData.find(userData => userData.email === user.email);
-          console.log("Pobrano dane użytkownika przed ustawieniem w stanie:", currentUserData);
       
           if (currentUserData) {
-            console.log("Ustawianie danych użytkownika w stanie:", currentUserData);
             setUserData(currentUserData);
           } else {
             console.log("Nie znaleziono danych dla bieżącego użytkownika.");

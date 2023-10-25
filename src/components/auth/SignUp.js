@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import addUserToFirestore from '../database/users/addUserToFirestore'; // Import the addUserToFirestore function
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -24,6 +27,7 @@ const SignUp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
       console.log('User registered successfully');
+      navigate('/signin');
 
       const user = userCredential.user;
       addUserToFirestore({
@@ -37,6 +41,8 @@ const SignUp = () => {
       console.error('Error during user registration: ', error);
     }
   };
+
+ 
 
   return (
         <div>

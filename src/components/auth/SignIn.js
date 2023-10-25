@@ -19,7 +19,6 @@ const SignIn = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                // Przekazuj aktualnego użytkownika do akcji updateUser
                 dispatch(updateUser(user));
             }
         });
@@ -44,6 +43,8 @@ const SignIn = () => {
             console.error("Błąd logowania:", error);
         }
     }
+
+    
 
     return (
         <div>
