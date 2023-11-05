@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import addUserToFirestore from '../database/users/addUserToFirestore';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid'; // Importuj funkcję generującą UUID
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -30,19 +31,20 @@ const SignUp = () => {
       navigate('/signin');
 
       const user = userCredential.user;
+      const userId = auth.currentUser.uid;
       addUserToFirestore({
+        id: userId,
         email: user.email,
         password: credentials.password,
         firstName: credentials.firstName,
         lastName: credentials.lastName,
-        games: []
+        games: [],
+        wishlist: [],
       });
     } catch (error) {
       console.error('Error during user registration: ', error);
     }
   };
-
- 
 
   return (
         <div>
@@ -68,7 +70,7 @@ const SignUp = () => {
                     <div className="input-field">
                         <button className="btn pink lighten-1 z-depth-0" type="submit">
                             Zarejestruj
-                            <i class="material-icons right">send</i>
+                            <i className="material-icons right">send</i>
                         </button>
                     </div>
                 </form>

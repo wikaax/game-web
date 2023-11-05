@@ -32,7 +32,6 @@ const UserProfile = () => {
     if (user) {
       fetchUserData();
     } else {
-      // Jeśli użytkownik nie istnieje, zakończ ładowanie
       setLoading(false);
     }
   }, [user]);
@@ -51,6 +50,7 @@ const UserProfile = () => {
             <div className="col s12 m6">
                 <h4><strong>{userData.firstName} {userData.lastName}</strong></h4>
                 <p>Email: {userData.email}</p>
+                <p>Gry: {user.games}</p>
             </div>
         </div>
     </div>

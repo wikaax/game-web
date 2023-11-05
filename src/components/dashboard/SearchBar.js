@@ -4,7 +4,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
     return (
         <div className="input-field">
             <input id="search" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            <label htmlFor="search">Search</label>
+            <label htmlFor="search">Szukaj</label>
         </div>
     );
 };
