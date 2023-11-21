@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { firestore } from '../config/firebaseConfig';
+import axios from 'axios';
+
+const client_id = '9f6gy9d28792qang0hxswp3gw6hexi';
+const client_secret = '5y7yapttxqz93341sp70tkfbeijutr';
+const tokenEndpoint = 'https://id.twitch.tv/oauth2/token';
+const igdbEndpoint = 'https://api.igdb.com/v4/games';
 
 const GameDetails = () => {
-  const { id } = useParams();
-  const [game, setGame] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log(id);

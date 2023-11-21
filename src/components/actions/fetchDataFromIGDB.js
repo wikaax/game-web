@@ -5,7 +5,7 @@ const client_secret = '5y7yapttxqz93341sp70tkfbeijutr';
 const tokenEndpoint = 'https://id.twitch.tv/oauth2/token';
 const igdbEndpoint = 'https://api.igdb.com/v4/games';
 
-export const fetchDataFromIGDB = async () => {
+export const fetchDataFromIGDB = async (igdbEndpoint) => {
     try {
         // get token
         const tokenResponse = await axios.post(`${tokenEndpoint}?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials`);

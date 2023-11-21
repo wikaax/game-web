@@ -23,6 +23,7 @@ const MyList = ({ igdbData }) => {
         if (currentUserData) {
           setUserGames(currentUserData.games || []);
           setUserWishlist(currentUserData.wishlist || []);
+          setRatings(currentUserData.ratings || {});
         } else {
           console.log('Nie znaleziono danych dla bieżącego użytkownika.');
         }
@@ -41,19 +42,25 @@ const MyList = ({ igdbData }) => {
     }
   }, [user]);
 
-  const handleRemoveGame = async (gameId) => {
+  const handleRemoveGame = async (gameId, listType) => {
     try {
       const userId = user.uid;
       const userDocRef = doc(firestore, 'users', userId);
 
+      const updatedList = listType === 'games' ? userGames.filter(id => id !== gameId) : userWishlist.filter(id => id !== gameId);
+
       await updateDoc(userDocRef, {
-        games: arrayRemove(gameId),
+        [listType]: updatedList,
       });
 
       console.log('Usunięto grę z listy:', gameId);
 
       // Aktualizuj lokalny stan po usunięciu gry
-      setUserGames(prevGames => prevGames.filter(id => id !== gameId));
+      if (listType === 'games') {
+        setUserGames(updatedList);
+      } else if (listType === 'wishlist') {
+        setUserWishlist(updatedList);
+      }
     } catch (error) {
       console.error('Błąd podczas usuwania gry z listy:', error);
     }
@@ -61,26 +68,25 @@ const MyList = ({ igdbData }) => {
 
   const handleRateGame = async (gameId, rating) => {
     try {
-      const userId = user.uid;
-      const userDocRef = doc(firestore, 'users', userId);
-      console.log('Próbuję ocenić grę:', gameId, 'Ocena:', rating);
-  
-      await updateDoc(userDocRef, {
-        ratings: {
-          ...ratings,
-          [gameId]: Number(rating),
-        },
-      });
-  
-      setRatings(prevRatings => {
-        const newRatings = {
+      if (userGames.includes(gameId)) {
+        // Sprawdź, czy gra znajduje się na liście "games"
+        const userId = user.uid;
+        const userDocRef = doc(firestore, 'users', userId);
+
+        await updateDoc(userDocRef, {
+          ratings: {
+            ...ratings,
+            [gameId]: Number(rating),
+          },
+        });
+
+        setRatings(prevRatings => ({
           ...prevRatings,
           [gameId]: Number(rating),
-        };
-        console.log('Ocena gry została zaktualizowana:', newRatings);
-        return newRatings;
-      });
-      console.log('Ocena gry została zaktualizowana:', ratings);
+        }));
+
+        console.log('Ocena gry została zaktualizowana:', ratings);
+      }
     } catch (error) {
       console.error('Błąd podczas oceniania gry:', error);
     }
@@ -90,25 +96,35 @@ const MyList = ({ igdbData }) => {
     return <div>Ładowanie danych użytkownika...</div>;
   }
 
-  function renderGameList(gameList) {
+  function renderGameList(gameList, listType) {
     return (
       <>
         {gameList.length > 0 ? (
           <ul>
             {gameList.map(gameId => {
               const game = igdbData.find(game => game.id === gameId);
-              const userRating = ratings[gameId] !== undefined ? ratings[gameId] : 0;
-  
+
               return (
                 <li key={gameId}>
                   {game ? (
                     <div>
                       <strong>Nazwa gry: </strong>{game.name}<br />
                       <strong>ID </strong>{game.id}<br />
-                      <strong>Ocena użytkownika: </strong>
-  
-                      <button onClick={() => handleRemoveGame(gameId)}>Usuń z listy</button>
-  
+                      {listType === 'games' && (
+                        <>
+                          <strong>Ocena użytkownika: </strong>
+                          <span>{ratings[gameId] !== undefined ? ratings[gameId] : 'Brak oceny'}</span>
+                          <input
+                            type="number"
+                            min="1"
+                            max="10"
+                            value={ratings[gameId] !== undefined ? ratings[gameId] : ''}
+                            onChange={(e) => handleRateGame(gameId, e.target.value)}
+                          />
+                          <button onClick={() => handleRemoveGame(gameId, listType)}>Usuń z listy</button>
+                        </>
+                      )}
+
                       <hr />
                     </div>
                   ) : (
@@ -130,16 +146,15 @@ const MyList = ({ igdbData }) => {
       <div className="row">
         <div className="col s12 m6">
           <h4>Moja biblioteka</h4>
-          {renderGameList(userGames)}
+          {renderGameList(userGames, 'games')}
         </div>
         <div className="col s12 m6">
           <h4>Lista życzeń</h4>
-          {renderGameList(userWishlist)}
+          {renderGameList(userWishlist, 'wishlist')}
         </div>
       </div>
     </div>
   );
-
 };
 
 export default MyList;

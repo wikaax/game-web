@@ -107,10 +107,13 @@ const Dashboard = () => {
                                         <strong>Nazwa: </strong>{game.name}<br />
                                         <strong>Opis: </strong>{game.summary}<br />
                                         <strong>Rating: </strong>{game.age_ratings}<br />
-                                        <div className='col s5'>
+                                        <br />
+                                        <div className='col s7'>
                                             <button className='btn pink darken-2 waves-effect waves-light btn' onClick={() => handleAddGame(game.id)}>Dodaj grę do biblioteki</button>
                                         </div>
-                                        <div className='col s5'>
+                                        <br />
+                                        <br />
+                                        <div className='col s7'>
                                             <button className='btn pink darken-2 waves-effect waves-light btn' onClick={() => handleAddWishlist(game.id)}>Dodaj grę do listy życzeń</button>
                                         </div>
                                         <br />
