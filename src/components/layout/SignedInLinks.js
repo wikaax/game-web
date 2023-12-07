@@ -32,12 +32,18 @@ const SignedInLinks = () => {
         }   
     };
 
-    if (isAuthenticated) {
+    if (isAuthenticated && currentUser) {
+        const initials = (currentUser.firstName && currentUser.lastName)
+            ? `${currentUser.firstName.charAt(0)}${currentUser.lastName.charAt(0)}`.toUpperCase()
+            : '';
+
+        console.log('Inicjały:', initials);
+
         return (
             <ul className="right">
-                <li><NavLink to='/mylist' className="btn pink darken-2 waves-effect waves-light btn" onClick={conLog}>Moja lista</NavLink></li>
-                <li><button className="btn pink darken-2 waves-effect waves-light btn" onClick={handleSignOut}>Wyloguj się</button></li>
-                <li><NavLink to='/profile' className='btn btn-floating pink darken-2'>{currentUser.firstName}</NavLink></li>
+                <li><NavLink to='/mylist' className="btn indigo lighten-1 waves-effect waves-light btn" onClick={conLog}>Moja lista</NavLink></li>
+                <li><button className="btn indigo lighten-1 waves-effect waves-light btn" onClick={handleSignOut}>Wyloguj się</button></li>
+                <li><NavLink to='/profile' className='btn indigo lighten-1'>Mój profil</NavLink></li>
             </ul>
         );
     } else {

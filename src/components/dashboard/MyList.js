@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import fetchDataFromFirestore from '../actions/fetchDataFromFirestore';
 import { useSelector } from 'react-redux';
-import { getFirestore, doc, updateDoc, arrayRemove } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc } from 'firebase/firestore';
+import M from 'materialize-css';
 
 const MyList = ({ igdbData }) => {
   const [userGames, setUserGames] = useState([]);
   const [userWishlist, setUserWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({});
-  const user = useSelector(state => state.auth.currentUser);
+  const [reviews, setReviews] = useState({});
+  const [selectedRating, setSelectedRating] = useState(1);
+  const [selectedReviews, setSelectedReviews] = useState({});
+  const user = useSelector((state) => state.auth.currentUser);
   const firestore = getFirestore();
 
   useEffect(() => {
@@ -18,12 +22,15 @@ const MyList = ({ igdbData }) => {
         const allUsersData = await fetchDataFromFirestore('users');
         console.log('Pobrano dane użytkowników:', allUsersData);
 
-        const currentUserData = allUsersData.find(userData => userData.email === user.email);
+        const currentUserData = allUsersData.find(
+          (userData) => userData.email === user.email
+        );
 
         if (currentUserData) {
           setUserGames(currentUserData.games || []);
           setUserWishlist(currentUserData.wishlist || []);
           setRatings(currentUserData.ratings || {});
+          setReviews(currentUserData.reviews || {});
         } else {
           console.log('Nie znaleziono danych dla bieżącego użytkownika.');
         }
@@ -42,12 +49,19 @@ const MyList = ({ igdbData }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    M.FormSelect.init(document.querySelectorAll('select'));
+  }, [loading]);
+
   const handleRemoveGame = async (gameId, listType) => {
     try {
       const userId = user.uid;
       const userDocRef = doc(firestore, 'users', userId);
 
-      const updatedList = listType === 'games' ? userGames.filter(id => id !== gameId) : userWishlist.filter(id => id !== gameId);
+      const updatedList =
+        listType === 'games'
+          ? userGames.filter((id) => id !== gameId)
+          : userWishlist.filter((id) => id !== gameId);
 
       await updateDoc(userDocRef, {
         [listType]: updatedList,
@@ -66,29 +80,52 @@ const MyList = ({ igdbData }) => {
     }
   };
 
-  const handleRateGame = async (gameId, rating) => {
+  const handleRateGame = async (gameId) => {
     try {
       if (userGames.includes(gameId)) {
-        // Sprawdź, czy gra znajduje się na liście "games"
         const userId = user.uid;
         const userDocRef = doc(firestore, 'users', userId);
 
         await updateDoc(userDocRef, {
           ratings: {
             ...ratings,
-            [gameId]: Number(rating),
+            [gameId]: selectedRating,
           },
         });
 
-        setRatings(prevRatings => ({
+        setRatings((prevRatings) => ({
           ...prevRatings,
-          [gameId]: Number(rating),
+          [gameId]: selectedRating,
         }));
 
         console.log('Ocena gry została zaktualizowana:', ratings);
       }
     } catch (error) {
       console.error('Błąd podczas oceniania gry:', error);
+    }
+  };
+
+  const handleReviewGame = async (gameId) => {
+    try {
+      if (userGames.includes(gameId)) {
+        const userId = user.uid;
+        const userDocRef = doc(firestore, 'users', userId);
+
+        const updatedReviews = {
+          ...reviews,
+          [gameId]: selectedReviews[gameId],
+        };
+
+        await updateDoc(userDocRef, {
+          reviews: updatedReviews,
+        });
+
+        setReviews(updatedReviews);
+
+        console.log('Recenzja gry została zaktualizowana:', updatedReviews);
+      }
+    } catch (error) {
+      console.error('Błąd podczas dodawania recenzji do gry:', error);
     }
   };
 
@@ -100,46 +137,97 @@ const MyList = ({ igdbData }) => {
     return (
       <>
         {gameList.length > 0 ? (
-          <ul>
-            {gameList.map(gameId => {
-              const game = igdbData.find(game => game.id === gameId);
-
+          <div>
+            {gameList.map((gameId) => {
+              const game = igdbData.find((game) => game.id === gameId);
+  
               return (
-                <li key={gameId}>
-                  {game ? (
-                    <div>
-                      <strong>Nazwa gry: </strong>{game.name}<br />
-                      <strong>ID </strong>{game.id}<br />
-                      {listType === 'games' && (
-                        <>
-                          <strong>Ocena użytkownika: </strong>
-                          <span>{ratings[gameId] !== undefined ? ratings[gameId] : 'Brak oceny'}</span>
-                          <input
-                            type="number"
-                            min="1"
-                            max="10"
-                            value={ratings[gameId] !== undefined ? ratings[gameId] : ''}
-                            onChange={(e) => handleRateGame(gameId, e.target.value)}
-                          />
-                          <button onClick={() => handleRemoveGame(gameId, listType)}>Usuń z listy</button>
-                        </>
-                      )}
-
-                      <hr />
-                    </div>
-                  ) : (
-                    <p>Brak danych dla gry o ID {gameId}</p>
-                  )}
-                </li>
+                <div key={gameId} className="card">
+                  <div className="card-content">
+                    {game ? (
+                      <>
+                        <span className="card-title">{game.name}</span>
+                        <p>
+                          <strong>ID: </strong>{game.id}
+                          <br />
+                          {listType === 'games' && (
+                            <>
+                              <strong>Ocena użytkownika: </strong>
+                              <span>
+                                {ratings[gameId] !== undefined
+                                  ? ratings[gameId]
+                                  : 'Brak oceny'}
+                              </span>
+                              <select
+                                value={selectedRating}
+                                onChange={(e) =>
+                                  setSelectedRating(Number(e.target.value))
+                                }
+                              >
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                                  <option key={value} value={value}>
+                                    {value}
+                                  </option>
+                                ))}
+                              </select>
+                              <br />
+                              <strong>Recenzja użytkownika: </strong>
+                              <span>
+                                {reviews[gameId] !== undefined
+                                  ? reviews[gameId]
+                                  : 'Brak recenzji'}
+                              </span>
+                              <textarea
+                                className="materialize-textarea"
+                                value={selectedReviews[gameId] || ''}
+                                onChange={(e) => {
+                                  const updatedReviews = {
+                                    ...selectedReviews,
+                                    [gameId]: e.target.value.substring(0, 300),
+                                  };
+                                  setSelectedReviews(updatedReviews);
+                                }}
+                                maxLength={300}
+                                rows="4"
+                                cols="50"
+                                placeholder="Dodaj recenzję (maks. 300 znaków)"
+                              ></textarea>
+                              <div className="button-container">
+                                <button className="btn indigo lighten-1 waves-effect waves-light btn" onClick={() => handleRateGame(gameId)}>
+                                  Zatwierdź ocenę
+                                </button>
+                                <span>&nbsp;</span>
+                                <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleReviewGame(gameId)}>
+                                  Dodaj recenzję
+                                </button>
+                              </div>
+                              <hr />
+                            </>
+                          )}
+                          {listType === 'wishlist' && (
+                            <div className="button-container">
+                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleRemoveGame(gameId, listType)}>
+                                Usuń grę
+                              </button>
+                            </div>
+                          )}
+                        </p>
+                      </>
+                    ) : (
+                      <p>Brak danych dla gry o ID {gameId}</p>
+                    )}
+                  </div>
+                </div>
               );
             })}
-          </ul>
+          </div>
         ) : (
           <p>Twoja lista jest pusta.</p>
         )}
       </>
     );
   }
+  
 
   return (
     <div className="dashboard container">

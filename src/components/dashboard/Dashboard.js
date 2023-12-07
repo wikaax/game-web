@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { app } from '../config/firebaseConfig';
 import { getAuth } from 'firebase/auth';
@@ -14,6 +15,8 @@ const Dashboard = () => {
     const [igdbData, setIgdbData] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const { user, updateUser } = useUser();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const [covers, setCovers] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,16 +109,20 @@ const Dashboard = () => {
                                         <strong>ID gry: </strong>{game.id}<br />
                                         <strong>Nazwa: </strong>{game.name}<br />
                                         <strong>Opis: </strong>{game.summary}<br />
-                                        <strong>Rating: </strong>{game.age_ratings}<br />
+                                        {/* <strong>Rating: </strong>{game.age_ratings}<br /> */}
                                         <br />
-                                        <div className='col s7'>
-                                            <button className='btn pink darken-2 waves-effect waves-light btn' onClick={() => handleAddGame(game.id)}>Dodaj grę do biblioteki</button>
-                                        </div>
+                                        {isAuthenticated && (
+                                          <div className='col s12'>
+                                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleAddGame(game.id)}>Dodaj grę do biblioteki</button>
+                                          </div>
+                                        )}
                                         <br />
                                         <br />
-                                        <div className='col s7'>
-                                            <button className='btn pink darken-2 waves-effect waves-light btn' onClick={() => handleAddWishlist(game.id)}>Dodaj grę do listy życzeń</button>
-                                        </div>
+                                        {isAuthenticated && (
+                                          <div className='col s12'>
+                                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleAddWishlist(game.id)}>Dodaj grę do listy życzeń</button>
+                                          </div>
+                                        )}
                                         <br />
                                         <br />
                                         <hr />

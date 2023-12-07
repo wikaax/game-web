@@ -12,8 +12,10 @@ const addUserToFirestore = async (user) => {
       password: user.password,
       firstName: user.firstName,
       lastName: user.lastName,
+      gender: user.gender,
       games: [],
       wishlist: [],
+      ratings: [],
     });
 
     console.log('User added to Firestore successfully');

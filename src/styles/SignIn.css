@@ -1,0 +1,25 @@
+.signInBox {
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.white {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+    margin-bottom: 20px;
+}
+
+.btn {
+    background-color: #ec407a;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: #d81b60;
+}

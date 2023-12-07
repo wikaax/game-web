@@ -10,7 +10,6 @@ const firebaseConfig = {
   messagingSenderId: "1052409711532",
   appId: "1:1052409711532:web:fa3ca6f871732006810809",
   measurementId: "G-X7Q44HE48Y",
-  // databaseURL: "https://game-web-39421-default-rtdb.firebaseio.com"
 };
 
 const app = initializeApp(firebaseConfig);

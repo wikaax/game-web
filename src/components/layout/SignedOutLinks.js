@@ -10,8 +10,8 @@ const SignedOutLinks = ({ isAuthenticated }) => {
     if (!isAuthenticated) {
         return (
             <ul className="right">
-                <li><NavLink to='/signup' className="btn pink darken-2 waves-effect waves-light btn">Zarejestruj się</NavLink></li>
-                <li><NavLink to='/signin' className="btn pink darken-2  waves-effect waves-light btn" onClick={conLog}>Zaloguj się</NavLink></li>
+                <li><NavLink to='/signup' className="btn indigo lighten-1 waves-effect waves-light btn">Zarejestruj się</NavLink></li>
+                <li><NavLink to='/signin' className="btn indigo lighten-1  waves-effect waves-light btn" onClick={conLog}>Zaloguj się</NavLink></li>
             </ul>
         );
     }

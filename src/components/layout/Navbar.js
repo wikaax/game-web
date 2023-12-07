@@ -4,6 +4,7 @@ import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authActions';
+import '../../styles/Navbar.css'
 
 const Navbar = (props) => {
     const { isAuthenticated } = props;
@@ -20,7 +21,7 @@ const Navbar = (props) => {
     }
 
     return (
-        <nav className="nav-wrapper pink darken-4">
+        <nav className="nav-wrapper">
             <div className="container">
                 <Link to='/' className="brand-logo">Game Web</Link>
                 {isAuthenticated ? <SignedInLinks /> : <SignedOutLinks />}

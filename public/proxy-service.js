@@ -35,7 +35,29 @@ app.get('/api/igdb/games', async (req, res) => {
             }
         });
 
-        res.json(igdbResponse.data);
+        const gameIds = igdbResponse.data.map(game => game.id).join(',');
+
+        const coversResponse = await axios.post('https://api.igdb.com/v4/covers', null, {
+            headers: {
+                'Client-ID': '9f6gy9d28792qang0hxswp3gw6hexi',
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+            },
+            }
+        );
+
+        const covers = {};
+        coversResponse.data.forEach(cover => {
+            covers[cover.game] = cover;
+        });
+
+        // Połącz dane o grach i okładkach
+        const gamesWithCovers = igdbResponse.data.map(game => ({
+            ...game,
+            cover: covers[game.id],
+        }));
+
+        res.json(gamesWithCovers);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
