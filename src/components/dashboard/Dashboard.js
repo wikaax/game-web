@@ -113,14 +113,14 @@ const Dashboard = () => {
                                         <br />
                                         {isAuthenticated && (
                                           <div className='col s12'>
-                                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleAddGame(game.id)}>Dodaj grę do biblioteki</button>
+                                              <button className='btn indigo lighten-1' onClick={() => handleAddGame(game.id)}>Dodaj grę do biblioteki</button>
                                           </div>
                                         )}
                                         <br />
                                         <br />
                                         {isAuthenticated && (
                                           <div className='col s12'>
-                                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleAddWishlist(game.id)}>Dodaj grę do listy życzeń</button>
+                                              <button className='btn indigo lighten-1' onClick={() => handleAddWishlist(game.id)}>Dodaj grę do listy życzeń</button>
                                           </div>
                                         )}
                                         <br />

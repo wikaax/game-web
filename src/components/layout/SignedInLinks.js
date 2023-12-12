@@ -41,8 +41,8 @@ const SignedInLinks = () => {
 
         return (
             <ul className="right">
-                <li><NavLink to='/mylist' className="btn indigo lighten-1 waves-effect waves-light btn" onClick={conLog}>Moja lista</NavLink></li>
-                <li><button className="btn indigo lighten-1 waves-effect waves-light btn" onClick={handleSignOut}>Wyloguj się</button></li>
+                <li><NavLink to='/mylist' className="btn indigo lighten-1" onClick={conLog}>Moja lista</NavLink></li>
+                <li><button className="btn indigo lighten-1" onClick={handleSignOut}>Wyloguj się</button></li>
                 <li><NavLink to='/profile' className='btn indigo lighten-1'>Mój profil</NavLink></li>
             </ul>
         );

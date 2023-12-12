@@ -69,7 +69,6 @@ const MyList = ({ igdbData }) => {
 
       console.log('Usunięto grę z listy:', gameId);
 
-      // Aktualizuj lokalny stan po usunięciu gry
       if (listType === 'games') {
         setUserGames(updatedList);
       } else if (listType === 'wishlist') {
@@ -193,12 +192,16 @@ const MyList = ({ igdbData }) => {
                                 placeholder="Dodaj recenzję (maks. 300 znaków)"
                               ></textarea>
                               <div className="button-container">
-                                <button className="btn indigo lighten-1 waves-effect waves-light btn" onClick={() => handleRateGame(gameId)}>
+                                <button className="btn indigo lighten-1" onClick={() => handleRateGame(gameId)}>
                                   Zatwierdź ocenę
                                 </button>
                                 <span>&nbsp;</span>
-                                <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleReviewGame(gameId)}>
+                                <button className='btn indigo lighten-1' onClick={() => handleReviewGame(gameId)}>
                                   Dodaj recenzję
+                                </button>
+                                <span>&nbsp;</span>
+                                <button className='btn indigo lighten-1' onClick={() => handleRemoveGame(gameId, listType)}>
+                                  Usuń grę
                                 </button>
                               </div>
                               <hr />
@@ -206,7 +209,7 @@ const MyList = ({ igdbData }) => {
                           )}
                           {listType === 'wishlist' && (
                             <div className="button-container">
-                              <button className='btn indigo lighten-1 waves-effect waves-light btn' onClick={() => handleRemoveGame(gameId, listType)}>
+                              <button className='btn indigo lighten-1' onClick={() => handleRemoveGame(gameId, listType)}>
                                 Usuń grę
                               </button>
                             </div>
